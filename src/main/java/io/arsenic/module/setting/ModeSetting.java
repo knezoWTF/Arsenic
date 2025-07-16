@@ -8,7 +8,7 @@ public final class ModeSetting<T extends Enum<T>> extends Setting<ModeSetting<T>
 	private final List<T> possibleValues;
 	private final int originalValue;
 
-	public ModeSetting(CharSequence name, T defaultValue, Class<T> type) {
+	public ModeSetting(String name, T defaultValue, Class<T> type) {
 		super(name);
 		T[] values = type.getEnumConstants();
 		this.possibleValues = Arrays.asList(values);

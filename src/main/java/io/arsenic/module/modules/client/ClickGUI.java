@@ -37,6 +37,19 @@ public final class ClickGUI extends Module {
 	public static final BooleanSetting antiAliasing = new BooleanSetting("MSAA", true)
 			.setDescription("Anti Aliasing | This can impact performance if you're using tracers but gives them a smoother look |");
 
+	public static final ModeSetting<Language> language = new ModeSetting<>("Language", Language.AMERICAN_ENGLISH, Language.class);
+
+	public enum Language {
+		CASTILLAN_SPANISH("es-ES"),
+		AMERICAN_ENGLISH("en-US");
+
+		public final String name;
+
+		Language(String name) {
+			this.name = name;
+		}
+	}
+
 	public enum AnimationMode {
 		Normal, Positive, Off;
 	}
@@ -47,7 +60,7 @@ public final class ClickGUI extends Module {
 				GLFW.GLFW_KEY_RIGHT_SHIFT,
 				Category.CLIENT);
 
-		addSettings(red, green, blue, alphaWindow, breathing, rainbow, background, preventClose, roundQuads, animationMode, antiAliasing);
+		addSettings(red, green, blue, alphaWindow, breathing, rainbow, background, preventClose, roundQuads, animationMode, antiAliasing, language);
 	}
 
 	@Override

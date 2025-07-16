@@ -4,7 +4,7 @@ public final class BooleanSetting extends Setting<BooleanSetting> {
 	private boolean value;
 	private final boolean originalValue;
 
-	public BooleanSetting(CharSequence name, boolean value) {
+	public BooleanSetting(String name, boolean value) {
 		super(name);
 		this.value = value;
 		this.originalValue = value;

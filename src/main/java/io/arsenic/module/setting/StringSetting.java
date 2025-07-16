@@ -3,7 +3,7 @@ package io.arsenic.module.setting;
 public class StringSetting extends Setting<StringSetting> {
     public String value;
 
-    public StringSetting(CharSequence name, String defaultValue) {
+    public StringSetting(String name, String defaultValue) {
         super(name);
         this.value = defaultValue;
     }

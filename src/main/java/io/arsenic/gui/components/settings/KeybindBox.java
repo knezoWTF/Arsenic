@@ -6,6 +6,7 @@ import io.arsenic.module.setting.Setting;
 import io.arsenic.utils.ColorUtils;
 import io.arsenic.utils.KeyUtils;
 import io.arsenic.utils.TextRenderer;
+import io.arsenic.utils.TranslationUtil;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
 
@@ -73,7 +74,7 @@ public final class KeybindBox extends RenderableSetting {
 
 		int off = parentX() + 6;
 		if (!keybind.isListening())
-			TextRenderer.drawString(setting.getName() + ": " + KeyUtils.getKey(keybind.getKey()), context, off, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
+			TextRenderer.drawString(TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()) + ": " + KeyUtils.getKey(keybind.getKey()), context, off, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
 		else TextRenderer.drawString("Listening...", context, off, (parentY() + parentOffset() + offset) + 6, new Color(245, 245, 245, 255).getRGB());
 
 		if (!parent.parent.dragging) {

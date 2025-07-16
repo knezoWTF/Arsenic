@@ -5,10 +5,7 @@ import io.arsenic.gui.components.ModuleButton;
 import io.arsenic.module.modules.client.ClickGUI;
 import io.arsenic.module.setting.Setting;
 import io.arsenic.module.setting.StringSetting;
-import io.arsenic.utils.ColorUtils;
-import io.arsenic.utils.RenderUtils;
-import io.arsenic.utils.TextRenderer;
-import io.arsenic.utils.Utils;
+import io.arsenic.utils.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -30,7 +27,7 @@ public final class StringBox extends RenderableSetting {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        TextRenderer.drawString(setting.getName() + ": " + (setting.getValue().length() <= 9 ? setting.getValue() : (setting.getValue().substring(0, 9) + "...")), context, parentX() + 9 ,(parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
+        TextRenderer.drawString(TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()) + ": " + (setting.getValue().length() <= 9 ? setting.getValue() : (setting.getValue().substring(0, 9) + "...")), context, parentX() + 9 ,(parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
 
         if (!parent.parent.dragging) {
             int toHoverAlpha = isHovered(mouseX, mouseY) ? 15 : 0;
@@ -71,7 +68,7 @@ public final class StringBox extends RenderableSetting {
                     int startY = screenMidY - 30;
 
                     RenderUtils.renderRoundedQuad(context.getMatrices(), new Color(0, 0, 0, ClickGUI.alphaWindow.getValueInt()), startX, startY, startX + width, screenMidY + 30, 5, 5, 0, 0, 20);
-                    TextRenderer.drawCenteredString(setting.getName(), context, screenMidX, startY + 10, new Color(245, 245, 245, 255).getRGB());
+                    TextRenderer.drawCenteredString(TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()), context, screenMidX, startY + 10, new Color(245, 245, 245, 255).getRGB());
                     context.fill(startX, screenMidY, startX + width, screenMidY + 30, new Color(0, 0, 0, 120).getRGB());
 
                     RenderUtils.renderRoundedOutline(context, new Color(50, 50, 50, 255), startX + 10, screenMidY + 5, startX + (width - 10), screenMidY + 25, 5, 5, 5, 5, 2, 20);

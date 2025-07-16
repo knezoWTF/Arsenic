@@ -85,7 +85,7 @@ public final class ModuleButton {
 			RenderUtils.renderRoundedQuad(context.getMatrices(), Utils.getMainColor(255, Arsenic.INSTANCE.getModuleManager().getModulesInCategory(module.getCategory()).indexOf(module)), parent.getX(), parent.getY() + offset, parent.getX() + 2, parent.getY() + (parent.getHeight() - 1) + offset, 0, 0, extended ? 0 : 2, 0, 50);
 		}
 
-		CharSequence nameChars = module.getName();
+		CharSequence nameChars = TranslationUtil.getModuleNameOrReturnEnglish(module.getName());
 
 		int totalWidth = TextRenderer.getWidth(nameChars);
 
@@ -101,7 +101,7 @@ public final class ModuleButton {
 			if(extended) renderableSetting.renderDescription(context, mouseX, mouseY, delta);
 
 		if (isHovered(mouseX, mouseY) && !parent.dragging) {
-			CharSequence chars = module.getDescription();
+			CharSequence chars = TranslationUtil.getModuleDescriptionOrReturnEnglish(module.getName(),module.getDescription());
 
 			int tw = TextRenderer.getWidth(chars);
 

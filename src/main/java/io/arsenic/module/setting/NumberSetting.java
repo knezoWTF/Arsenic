@@ -11,7 +11,7 @@ public final class NumberSetting extends Setting<NumberSetting> {
 	
 	private final double originalValue;
 
-	public NumberSetting(CharSequence name, double min, double max, double value, double increment) {
+	public NumberSetting(String name, double min, double max, double value, double increment) {
 		super(name);
 		this.min = min;
 		this.max = max;

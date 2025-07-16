@@ -6,6 +6,7 @@ import io.arsenic.utils.ColorUtils;
 import io.arsenic.utils.RenderUtils;
 import io.arsenic.utils.TextRenderer;
 
+import io.arsenic.utils.TranslationUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
@@ -69,8 +70,8 @@ public abstract class RenderableSetting {
 	}
 
 	public void renderDescription(DrawContext context, int mouseX, int mouseY, float delta) {
-		if (isHovered(mouseX, mouseY) && setting.getDescription() != null && !parent.parent.dragging) {
-			CharSequence chars = setting.getDescription();
+		if (isHovered(mouseX, mouseY) && TranslationUtil.getSettingDescriptionOrReturnEnglish(parent.module.getName(), setting.getName(),setting.getDescription()) != null && !parent.parent.dragging) {
+			CharSequence chars = TranslationUtil.getSettingDescriptionOrReturnEnglish(parent.module.getName(), setting.getName(),setting.getDescription());
 
 			int tw = TextRenderer.getWidth(chars);
 

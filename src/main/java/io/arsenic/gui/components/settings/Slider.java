@@ -3,10 +3,7 @@ package io.arsenic.gui.components.settings;
 import io.arsenic.gui.components.ModuleButton;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.module.setting.Setting;
-import io.arsenic.utils.ColorUtils;
-import io.arsenic.utils.MathUtils;
-import io.arsenic.utils.TextRenderer;
-import io.arsenic.utils.Utils;
+import io.arsenic.utils.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
@@ -61,7 +58,7 @@ public final class Slider extends RenderableSetting {
 		lerpedOffsetX = MathUtils.goodLerp((float) (0.5 * delta), lerpedOffsetX, offsetX);
 		context.fillGradient(parentX(), parentY() + offset + parentOffset() + 25, (int) (parentX() + lerpedOffsetX), parentY() + offset + parentOffset() + parentHeight(), currentColor1.getRGB(), currentColor2.getRGB());
 
-		TextRenderer.drawString(setting.getName() + ": " + setting.getValue(), context, parentX() + 5, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
+		TextRenderer.drawString(TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()) + ": " + setting.getValue(), context, parentX() + 5, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
 
 		if (!parent.parent.dragging) {
 			int toHoverAlpha = isHovered(mouseX, mouseY) ? 15 : 0;

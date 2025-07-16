@@ -13,13 +13,13 @@ import java.util.List;
 public abstract class Module implements Serializable {
 	private final List<Setting<?>> settings = new ArrayList<>();
 	protected MinecraftClient mc = MinecraftClient.getInstance();
-	private CharSequence name;
-	private CharSequence description;
+	private String name;
+	private String description;
 	private boolean enabled;
 	private int key;
 	private Category category;
 
-	public Module(CharSequence name, CharSequence description, int key, Category category) {
+	public Module(String name, String description, int key, Category category) {
 		this.name = name;
 		this.description = description;
 		this.enabled = false;
@@ -38,7 +38,7 @@ public abstract class Module implements Serializable {
 		}
 	}
 
-	public CharSequence getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -46,7 +46,7 @@ public abstract class Module implements Serializable {
 		return enabled;
 	}
 
-	public CharSequence getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
@@ -62,11 +62,11 @@ public abstract class Module implements Serializable {
 		this.category = category;
 	}
 
-	public void setName(CharSequence name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setDescription(CharSequence description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 

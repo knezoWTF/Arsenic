@@ -5,6 +5,7 @@ import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.Setting;
 import io.arsenic.utils.ColorUtils;
 import io.arsenic.utils.TextRenderer;
+import io.arsenic.utils.TranslationUtil;
 import io.arsenic.utils.Utils;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
@@ -25,7 +26,7 @@ public final class CheckBox extends RenderableSetting {
 		super.render(context, mouseX, mouseY, delta);
 
 		int nameOffset = parentX() + 31;
-		CharSequence chars = setting.getName();
+		CharSequence chars = TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName());
 
 		TextRenderer.drawString(chars, context, nameOffset, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
 

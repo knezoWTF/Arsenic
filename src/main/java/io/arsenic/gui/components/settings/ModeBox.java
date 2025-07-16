@@ -5,6 +5,7 @@ import io.arsenic.module.setting.ModeSetting;
 import io.arsenic.module.setting.Setting;
 import io.arsenic.utils.ColorUtils;
 import io.arsenic.utils.TextRenderer;
+import io.arsenic.utils.TranslationUtil;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
 
@@ -24,8 +25,8 @@ public final class ModeBox extends RenderableSetting {
 		super.render(context, mouseX, mouseY, delta);
 
 		int nameOffset = parentX() + 6;
-		TextRenderer.drawString(setting.getName() + ": ", context, nameOffset, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
-		nameOffset += TextRenderer.getWidth(setting.getName() + ": ");
+		TextRenderer.drawString(TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()) + ": ", context, nameOffset, (parentY() + parentOffset() + offset) + 9, new Color(245, 245, 245, 255).getRGB());
+		nameOffset += TextRenderer.getWidth(TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()) + ": ");
 
 		int modeOffset = nameOffset;
 

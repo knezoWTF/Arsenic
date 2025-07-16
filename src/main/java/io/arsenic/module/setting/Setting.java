@@ -1,26 +1,26 @@
 package io.arsenic.module.setting;
 
 public abstract class Setting<T extends Setting<T>> {
-	private CharSequence name;
-	public CharSequence description;
+	private String name;
+	public String description;
 
-	public Setting(CharSequence name) {
+	public Setting(String name) {
 		this.name = name;
 	}
 
-	public void setName(CharSequence name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public CharSequence getName() {
+	public String getName() {
 		return name;
 	}
 
-	public CharSequence getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
-	public T setDescription(CharSequence desc) {
+	public T setDescription(String desc) {
 		this.description = desc;
 		//noinspection unchecked
 		return (T) this;

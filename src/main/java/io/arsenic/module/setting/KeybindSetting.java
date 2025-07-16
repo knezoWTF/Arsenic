@@ -6,7 +6,7 @@ public final class KeybindSetting extends Setting<KeybindSetting> {
 	private final boolean moduleKey;
 	private final int originalKey;
 
-	public KeybindSetting(CharSequence name, int key, boolean moduleKey) {
+	public KeybindSetting(String name, int key, boolean moduleKey) {
 		super(name);
 		this.keyCode = key;
 		this.originalKey = key;

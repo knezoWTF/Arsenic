@@ -3,10 +3,7 @@ package io.arsenic.gui.components.settings;
 import io.arsenic.gui.components.ModuleButton;
 import io.arsenic.module.setting.MinMaxSetting;
 import io.arsenic.module.setting.Setting;
-import io.arsenic.utils.ColorUtils;
-import io.arsenic.utils.MathUtils;
-import io.arsenic.utils.TextRenderer;
-import io.arsenic.utils.Utils;
+import io.arsenic.utils.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
@@ -46,7 +43,7 @@ public final class MinMaxSlider extends RenderableSetting {
         lerpedOffsetMinX = MathUtils.goodLerp((float) (0.5 * delta), lerpedOffsetMinX, offsetMinX);
         lerpedOffsetMaxX = MathUtils.goodLerp((float) (0.5 * delta), lerpedOffsetMaxX, offsetMaxX);
 
-        CharSequence str = setting.getName() + ": " + (setting.getMinValue() == setting.getMaxValue() ? setting.getMinValue() : setting.getMinValue() + " - " + setting.getMaxValue());
+        CharSequence str = TranslationUtil.getSettingNameOrReturnEnglish(parent.module.getName(), setting.getName()) + ": " + (setting.getMinValue() == setting.getMaxValue() ? setting.getMinValue() : setting.getMinValue() + " - " + setting.getMaxValue());
 
         context.fillGradient((int) (parentX() + lerpedOffsetMinX), parentY() + offset + parentOffset() + 25, (int) (parentX() + lerpedOffsetMinX + getLength()), parentY() + offset + parentOffset() + parentHeight(), currentColor1.getRGB(), currentColor2.getRGB());
 

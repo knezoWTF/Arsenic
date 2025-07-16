@@ -9,7 +9,7 @@ public class MinMaxSetting extends Setting<MinMaxSetting> {
     private double minValue;
     private double maxValue;
 
-    public MinMaxSetting(CharSequence name, double min, double max, double increment, double defaultMin, double defaultMax) {
+    public MinMaxSetting(String name, double min, double max, double increment, double defaultMin, double defaultMax) {
         super(name);
         this.min = min;
         this.max = max;
