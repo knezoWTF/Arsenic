@@ -35,7 +35,6 @@ public final class SelfDestruct extends Module {
 	public void onEnable() {
 		if (!mc.player.isSneaking()) {
 			setEnabled(false);
-			return;
 		}
 
 		destruct = true;
