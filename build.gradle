@@ -29,6 +29,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     include implementation("meteordevelopment:orbit:0.2.4")
+    implementation "io.github.racoondog:norbit:1.2.0"
 
     compileOnly files("lib/annotations-1.0.6.jar")
 }

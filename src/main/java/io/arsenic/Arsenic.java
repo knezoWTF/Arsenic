@@ -5,7 +5,7 @@ import io.arsenic.managers.FriendManager;
 import io.arsenic.module.ModuleManager;
 import io.arsenic.managers.ProfileManager;
 import io.arsenic.utils.rotation.RotatorManager;
-import meteordevelopment.orbit.EventBus;
+import io.github.racoondog.norbit.EventBus;
 import meteordevelopment.orbit.IEventBus;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -30,7 +30,7 @@ public final class Arsenic {
 	public Screen previousScreen = null;
 	public long lastModified;
 	public File arsenicJar;
-	public static final IEventBus EVENT_BUS = new EventBus();
+	public static final IEventBus EVENT_BUS = EventBus.threadSafe();
 
 	public Arsenic() throws InterruptedException, IOException {
 		INSTANCE = this;
