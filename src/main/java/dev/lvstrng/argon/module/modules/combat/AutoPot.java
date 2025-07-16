@@ -13,19 +13,19 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
 public final class AutoPot extends Module implements TickListener {
-	private final NumberSetting minHealth = new NumberSetting(EncryptedString.of("Min Health"), 1, 20, 10, 1);
-	private final NumberSetting switchDelay = new NumberSetting(EncryptedString.of("Switch Delay"), 0, 10, 0, 1);
-	private final NumberSetting throwDelay = new NumberSetting(EncryptedString.of("Throw Delay"), 0, 10, 0, 1);
-	private final BooleanSetting goToPrevSlot = new BooleanSetting(EncryptedString.of("Switch Back"), true);
-	private final BooleanSetting lookDown = new BooleanSetting(EncryptedString.of("Look Down"), true);
+	private final NumberSetting minHealth = new NumberSetting("Min Health", 1, 20, 10, 1);
+	private final NumberSetting switchDelay = new NumberSetting("Switch Delay", 0, 10, 0, 1);
+	private final NumberSetting throwDelay = new NumberSetting("Throw Delay", 0, 10, 0, 1);
+	private final BooleanSetting goToPrevSlot = new BooleanSetting("Switch Back", true);
+	private final BooleanSetting lookDown = new BooleanSetting("Look Down", true);
 
 	private int switchClock, throwClock, prevSlot;
 	private float prevPitch;
 	private boolean bool;
 
 	public AutoPot() {
-		super(EncryptedString.of("Auto Pot"),
-				EncryptedString.of("Automatically throws health potions when low on health"),
+		super("Auto Pot",
+				"Automatically throws health potions when low on health",
 				-1,
 				Category.COMBAT);
 

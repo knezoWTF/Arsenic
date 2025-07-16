@@ -18,14 +18,14 @@ import java.awt.*;
 import java.util.List;
 
 public final class HUD extends Module implements HudListener {
-	private static final CharSequence argon = EncryptedString.of("Argon |");
-	private final BooleanSetting info = new BooleanSetting(EncryptedString.of("Info"), true);
+	private static final CharSequence argon = "Argon |";
+	private final BooleanSetting info = new BooleanSetting("Info", true);
 	private final BooleanSetting modules = new BooleanSetting("Modules", true)
-			.setDescription(EncryptedString.of("Renders module array list"));
+			.setDescription("Renders module array list");
 
 	public HUD() {
-		super(EncryptedString.of("HUD"),
-				EncryptedString.of("Renders the client version and enabled modules on the HUD"),
+		super("HUD",
+				"Renders the client version and enabled modules on the HUD",
 				-1,
 				Category.RENDER);
 		addSettings(info, modules);

@@ -21,15 +21,15 @@ import org.lwjgl.glfw.GLFW;
 
 
 public final class AutoClicker extends Module implements TickListener {
-	private final BooleanSetting onlyWeapon = new BooleanSetting(EncryptedString.of("Only Weapon"), true)
-			.setDescription(EncryptedString.of("Only left clicks with weapon in hand"));
-	private final BooleanSetting onlyBlocks = new BooleanSetting(EncryptedString.of("Only Blocks"), true)
-			.setDescription(EncryptedString.of("Only right clicks blocks"));
-	private final BooleanSetting onClick = new BooleanSetting(EncryptedString.of("On Click"), true);
+	private final BooleanSetting onlyWeapon = new BooleanSetting("Only Weapon", true)
+			.setDescription("Only left clicks with weapon in hand");
+	private final BooleanSetting onlyBlocks = new BooleanSetting("Only Blocks", true)
+			.setDescription("Only right clicks blocks");
+	private final BooleanSetting onClick = new BooleanSetting("On Click", true);
 
-	private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay"), 0, 1000, 0, 1);
-	private final NumberSetting chance = new NumberSetting(EncryptedString.of("Chance"), 0, 100, 100, 1);
-	private final ModeSetting<Mode> mode = new ModeSetting<>(EncryptedString.of("Actions"), Mode.All, Mode.class);
+	private final NumberSetting delay = new NumberSetting("Delay", 0, 1000, 0, 1);
+	private final NumberSetting chance = new NumberSetting("Chance", 0, 100, 100, 1);
+	private final ModeSetting<Mode> mode = new ModeSetting<>("Actions", Mode.All, Mode.class);
 	private final TimerUtils timer = new TimerUtils();
 
 	public enum Mode {
@@ -37,8 +37,8 @@ public final class AutoClicker extends Module implements TickListener {
 	}
 
 	public AutoClicker() {
-		super(EncryptedString.of("Auto Clicker"),
-				EncryptedString.of("Automatically clicks for you"),
+		super("Auto Clicker",
+				"Automatically clicks for you",
 				-1,
 				Category.MISC);
 

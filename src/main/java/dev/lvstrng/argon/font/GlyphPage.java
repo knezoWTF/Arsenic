@@ -1,7 +1,6 @@
 package dev.lvstrng.argon.font;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import lombok.Getter;
 import net.minecraft.client.render.*;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 public final class GlyphPage {
 
 	private int imgSize;
-	@Getter
 	private int maxFontHeight = -1;
 	private final Font font;
 	private final boolean antiAliasing;
@@ -180,7 +178,10 @@ public final class GlyphPage {
 		return fractionalMetrics;
 	}
 
-	@Getter
+	public int getMaxFontHeight() {
+		return maxFontHeight;
+	}
+
 	static class Glyph {
 		private int x;
 		private int y;
