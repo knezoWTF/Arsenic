@@ -1,9 +1,10 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.PacketSendListener;
+import io.arsenic.event.events.PacketSendEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.utils.WorldUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -14,7 +15,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 
-public final class CrystalOptimizer extends Module implements PacketSendListener {
+public final class CrystalOptimizer extends Module {
 	public CrystalOptimizer() {
 		super("Crystal Optimizer",
 				"Makes your crystals disappear faster client-side so you can place crystals faster",
@@ -24,18 +25,16 @@ public final class CrystalOptimizer extends Module implements PacketSendListener
 
 	@Override
 	public void onEnable() {
-		eventManager.add(PacketSendListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(PacketSendListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onPacketSend(PacketSendEvent event) {
+	@EventHandler
+	private void onPacketSendEvent(PacketSendEvent event) {
 		if (event.packet instanceof PlayerInteractEntityC2SPacket interactPacket) {
 			interactPacket.handle(new PlayerInteractEntityC2SPacket.Handler() {
 				@Override

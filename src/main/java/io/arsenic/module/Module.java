@@ -1,7 +1,6 @@
 package io.arsenic.module;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.EventManager;
 import io.arsenic.module.setting.Setting;
 
 import net.minecraft.client.MinecraftClient;
@@ -13,7 +12,6 @@ import java.util.List;
 
 public abstract class Module implements Serializable {
 	private final List<Setting<?>> settings = new ArrayList<>();
-	public final EventManager eventManager = Arsenic.INSTANCE.eventManager;
 	protected MinecraftClient mc = MinecraftClient.getInstance();
 	private CharSequence name;
 	private CharSequence description;
@@ -31,9 +29,13 @@ public abstract class Module implements Serializable {
 
 	public void toggle() {
 		enabled = !enabled;
-		if (enabled)
+		if (enabled) {
 			onEnable();
-		else onDisable();
+			Arsenic.EVENT_BUS.subscribe(this);
+		} else {
+			onDisable();
+			Arsenic.EVENT_BUS.unsubscribe(this);
+		}
 	}
 
 	public CharSequence getName() {
@@ -90,13 +92,24 @@ public abstract class Module implements Serializable {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		if (enabled)
+		if (enabled) {
 			onEnable();
-		else onDisable();
+			Arsenic.EVENT_BUS.subscribe(this);
+		} else {
+			onDisable();
+			Arsenic.EVENT_BUS.unsubscribe(this);
+		}
 	}
 
 	public void setEnabledStatus(boolean enabled) {
 		this.enabled = enabled;
+		if (enabled) {
+			onEnable();
+			Arsenic.EVENT_BUS.subscribe(this);
+		} else {
+			onDisable();
+			Arsenic.EVENT_BUS.unsubscribe(this);
+		}
 	}
 
 }

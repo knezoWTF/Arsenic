@@ -1,7 +1,7 @@
 package io.arsenic.mixin;
 
-import io.arsenic.event.EventManager;
-import io.arsenic.event.events.ButtonListener;
+import io.arsenic.Arsenic;
+import io.arsenic.event.events.ButtonEvent;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Final;
@@ -19,6 +19,6 @@ public class KeyboardMixin {
 
 	@Inject(method = "onKey", at = @At("HEAD"))
 	private void onPress(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
-		EventManager.fire(new ButtonListener.ButtonEvent(key, window, action));
+		Arsenic.EVENT_BUS.post(new ButtonEvent(key,window,action));
 	}
 }

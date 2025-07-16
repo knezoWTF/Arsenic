@@ -1,11 +1,12 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.CameraUpdateListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.CameraUpdateEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.mixin.KeyBindingAccessor;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.NumberSetting;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderTickCounter;
@@ -14,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 
-public final class Freecam extends Module implements TickListener, CameraUpdateListener {
+public final class Freecam extends Module {
 	private final NumberSetting speed = new NumberSetting("Speed", 1, 10, 1, 1);
 	public Vec3d oldPos;
 	public Vec3d pos;
@@ -32,8 +33,6 @@ public final class Freecam extends Module implements TickListener, CameraUpdateL
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-		eventManager.add(CameraUpdateListener.class, this);
 		if (mc.world != null) {
 			this.oldPos = this.pos = mc.player.getEyePos();
 		}
@@ -43,9 +42,6 @@ public final class Freecam extends Module implements TickListener, CameraUpdateL
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(CameraUpdateListener.class, this);
-
 		if (mc.world != null) {
 			mc.player.setVelocity(Vec3d.ZERO);
 			mc.worldRenderer.reload();
@@ -53,8 +49,8 @@ public final class Freecam extends Module implements TickListener, CameraUpdateL
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 
@@ -113,8 +109,8 @@ public final class Freecam extends Module implements TickListener, CameraUpdateL
 		pos = pos.add(vec3d5);
 	}
 
-	@Override
-	public void onCameraUpdate(CameraUpdateEvent event) {
+	@EventHandler
+	private void onCameraUpdateEvent(CameraUpdateEvent event) {
 		float tickDelta = RenderTickCounter.ONE.getTickDelta(true);
 
 		if (mc.currentScreen != null)

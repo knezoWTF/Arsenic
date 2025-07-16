@@ -1,13 +1,14 @@
 package io.arsenic.module.modules.render;
 
-import io.arsenic.event.events.GameRenderListener;
-import io.arsenic.event.events.PacketReceiveListener;
+import io.arsenic.event.events.GameRenderEvent;
+import io.arsenic.event.events.PacketReceiveEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.RenderUtils;
 import io.arsenic.utils.WorldUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.entity.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,7 +19,7 @@ import net.minecraft.world.chunk.WorldChunk;
 
 import java.awt.*;
 
-public final class StorageEsp extends Module implements GameRenderListener, PacketReceiveListener {
+public final class StorageEsp extends Module {
 	private final NumberSetting alpha = new NumberSetting("Alpha", 1, 255, 125, 1);
 	private final BooleanSetting donutBypass = new BooleanSetting("Donut Bypass", false);
 	private final BooleanSetting tracers = new BooleanSetting("Tracers", false)
@@ -34,20 +35,16 @@ public final class StorageEsp extends Module implements GameRenderListener, Pack
 
 	@Override
 	public void onEnable() {
-		eventManager.add(PacketReceiveListener.class, this);
-		eventManager.add(GameRenderListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(PacketReceiveListener.class, this);
-		eventManager.remove(GameRenderListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onGameRender(GameRenderEvent event) {
+	@EventHandler
+	private void onGameRenderEvent(GameRenderEvent event) {
 		renderStorages(event);
 	}
 
@@ -95,8 +92,8 @@ public final class StorageEsp extends Module implements GameRenderListener, Pack
 		matrixStack.pop();
 	}
 
-	@Override
-	public void onPacketReceive(PacketReceiveEvent event) {
+	@EventHandler
+	private void onPacketReceiveEvent(PacketReceiveEvent event) {
 		if (donutBypass.getValue()) {
 			if (event.packet instanceof ChunkDeltaUpdateS2CPacket) {
 				event.cancel();

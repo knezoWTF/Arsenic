@@ -1,19 +1,20 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.ItemUseListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.ItemUseEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.MathUtils;
 import io.arsenic.utils.MouseSimulation;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 
-public final class AutoXP extends Module implements TickListener, ItemUseListener {
+public final class AutoXP extends Module {
 	private final NumberSetting delay = new NumberSetting("Delay", 0, 20, 0, 1);
 	private final NumberSetting chance = new NumberSetting("Chance", 0, 100, 100, 1)
 			.setDescription("Randomization");
@@ -31,22 +32,17 @@ public final class AutoXP extends Module implements TickListener, ItemUseListene
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-		eventManager.add(ItemUseListener.class, this);
-
 		clock = 0;
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 
@@ -74,8 +70,8 @@ public final class AutoXP extends Module implements TickListener, ItemUseListene
 		}
 	}
 
-	@Override
-	public void onItemUse(ItemUseEvent event) {
+	@EventHandler
+	private void onItemUseEvent(ItemUseEvent event) {
 		if (mc.player.getMainHandStack().getItem() == Items.EXPERIENCE_BOTTLE) {
 			event.cancel();
 		}

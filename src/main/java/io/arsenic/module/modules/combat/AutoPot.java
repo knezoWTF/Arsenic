@@ -1,16 +1,17 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.InventoryUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
-public final class AutoPot extends Module implements TickListener {
+public final class AutoPot extends Module {
 	private final NumberSetting minHealth = new NumberSetting("Min Health", 1, 20, 10, 1);
 	private final NumberSetting switchDelay = new NumberSetting("Switch Delay", 0, 10, 0, 1);
 	private final NumberSetting throwDelay = new NumberSetting("Throw Delay", 0, 10, 0, 1);
@@ -39,19 +40,17 @@ public final class AutoPot extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		reset();
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 

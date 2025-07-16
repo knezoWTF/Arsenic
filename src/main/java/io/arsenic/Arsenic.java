@@ -1,16 +1,18 @@
 package io.arsenic;
 
-import io.arsenic.event.EventManager;
 import io.arsenic.gui.ClickGui;
 import io.arsenic.managers.FriendManager;
 import io.arsenic.module.ModuleManager;
 import io.arsenic.managers.ProfileManager;
 import io.arsenic.utils.rotation.RotatorManager;
+import meteordevelopment.orbit.EventBus;
+import meteordevelopment.orbit.IEventBus;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.net.*;
 
 @SuppressWarnings("all")
@@ -18,7 +20,6 @@ public final class Arsenic {
 	public RotatorManager rotatorManager;
 	public ProfileManager profileManager;
 	public ModuleManager moduleManager;
-	public EventManager eventManager;
 	public FriendManager friendManager;
 	public static MinecraftClient mc;
 	public String version = " b1.3";
@@ -29,10 +30,11 @@ public final class Arsenic {
 	public Screen previousScreen = null;
 	public long lastModified;
 	public File arsenicJar;
+	public static final IEventBus EVENT_BUS = new EventBus();
 
 	public Arsenic() throws InterruptedException, IOException {
 		INSTANCE = this;
-		this.eventManager = new EventManager();
+		EVENT_BUS.registerLambdaFactory("io.arsenic", (lookupInMethod, klass) -> (MethodHandles.Lookup) lookupInMethod.invoke(null, klass, MethodHandles.lookup()));
 		this.moduleManager = new ModuleManager();
 		this.clickGui = new ClickGui();
 		this.rotatorManager = new RotatorManager();
@@ -56,10 +58,6 @@ public final class Arsenic {
 
 	public FriendManager getFriendManager() {
 		return friendManager;
-	}
-
-	public EventManager getEventManager() {
-		return eventManager;
 	}
 
 	public ClickGui getClickGui() {

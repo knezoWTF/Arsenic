@@ -1,12 +1,13 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.MathUtils;
+import meteordevelopment.orbit.EventHandler;
 
-public final class AutoJumpReset extends Module implements TickListener {
+public final class AutoJumpReset extends Module {
 	private final NumberSetting chance = new NumberSetting("Chance", 0, 100, 100, 1);
 
 	public AutoJumpReset() {
@@ -19,18 +20,16 @@ public final class AutoJumpReset extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if(MathUtils.randomInt(1, 100) <= chance.getValueInt()) {
 			if (mc.currentScreen != null)
 				return;

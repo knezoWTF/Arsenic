@@ -1,11 +1,12 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
+import meteordevelopment.orbit.EventHandler;
 import org.lwjgl.glfw.GLFW;
 
-public final class NoJumpDelay extends Module implements TickListener {
+public final class NoJumpDelay extends Module {
 	public NoJumpDelay() {
 		super("No Jump Delay",
 				"Lets you jump faster, removing the delay",
@@ -15,18 +16,16 @@ public final class NoJumpDelay extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 

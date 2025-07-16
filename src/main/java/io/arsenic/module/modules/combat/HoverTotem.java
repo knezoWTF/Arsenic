@@ -1,17 +1,18 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.mixin.HandledScreenMixin;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 
-public final class HoverTotem extends Module implements TickListener {
+public final class HoverTotem extends Module {
 	private final NumberSetting delay = new NumberSetting("Delay", 0, 20, 0, 1);
 	private final BooleanSetting hotbar = new BooleanSetting("Hotbar", true).setDescription("Puts a totem in your hotbar as well, if enabled (Setting below will work if this is enabled)");
 	private final NumberSetting slot = new NumberSetting("Totem Slot", 1, 9, 1, 1)
@@ -31,19 +32,17 @@ public final class HoverTotem extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		clock = 0;
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen instanceof InventoryScreen inv) {
 			Slot hoveredSlot = ((HandledScreenMixin) inv).getFocusedSlot();
 

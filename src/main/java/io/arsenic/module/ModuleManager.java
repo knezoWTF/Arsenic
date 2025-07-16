@@ -1,24 +1,22 @@
 package io.arsenic.module;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.ButtonListener;
+import io.arsenic.event.events.ButtonEvent;
 import io.arsenic.module.modules.client.ClickGUI;
 import io.arsenic.module.modules.client.Friends;
 import io.arsenic.module.modules.client.SelfDestruct;
 import io.arsenic.module.modules.combat.*;
 import io.arsenic.module.modules.misc.*;
 import io.arsenic.module.modules.render.*;
-import io.arsenic.module.modules.combat.*;
-import io.arsenic.module.modules.misc.*;
-import io.arsenic.module.modules.render.*;
 import io.arsenic.module.setting.KeybindSetting;
 
+import meteordevelopment.orbit.EventHandler;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ModuleManager implements ButtonListener {
+public final class ModuleManager {
 	private final List<Module> modules = new ArrayList<>();
 
 	public ModuleManager() {
@@ -84,7 +82,7 @@ public final class ModuleManager implements ButtonListener {
 	}
 
 	public void addKeybinds() {
-		Arsenic.INSTANCE.getEventManager().add(ButtonListener.class, this);
+		Arsenic.EVENT_BUS.subscribe(this);
 
 		for (Module module : modules)
 			module.addSetting(new KeybindSetting("Keybind", module.getKey(), true).setDescription("Key to enabled the module"));
@@ -108,8 +106,8 @@ public final class ModuleManager implements ButtonListener {
 		modules.add(module);
 	}
 
-	@Override
-	public void onButtonPress(ButtonEvent event) {
+	@EventHandler
+	private void onButtonPressEvent(ButtonEvent event) {
 		if(!SelfDestruct.destruct) {
 			modules.forEach(module -> {
 				if(module.getKey() == event.button && event.action == GLFW.GLFW_PRESS)

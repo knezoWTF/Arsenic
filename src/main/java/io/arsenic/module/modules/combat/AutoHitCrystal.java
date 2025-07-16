@@ -1,16 +1,16 @@
 package io.arsenic.module.modules.combat;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.AttackListener;
-import io.arsenic.event.events.ItemUseListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.AttackEvent;
+import io.arsenic.event.events.ItemUseEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.KeybindSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.*;
-import io.arsenic.utils.*;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
-public final class AutoHitCrystal extends Module implements TickListener, ItemUseListener, AttackListener {
+public final class AutoHitCrystal extends Module {
 	private final KeybindSetting activateKey = new KeybindSetting("Activate Key", GLFW.GLFW_MOUSE_BUTTON_RIGHT, false)
 			.setDescription("Key that does hit crystalling");
 	private final BooleanSetting checkPlace = new BooleanSetting("Check Place", false)
@@ -51,9 +51,6 @@ public final class AutoHitCrystal extends Module implements TickListener, ItemUs
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-		eventManager.add(ItemUseListener.class, this);
-		eventManager.add(AttackListener.class, this);
 		reset();
 
 		super.onEnable();
@@ -61,14 +58,11 @@ public final class AutoHitCrystal extends Module implements TickListener, ItemUs
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
-		eventManager.remove(AttackListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		int randomNum = MathUtils.randomInt(1, 100);
 
 		if (mc.currentScreen != null)
@@ -159,14 +153,14 @@ public final class AutoHitCrystal extends Module implements TickListener, ItemUs
 					AutoCrystal autoCrystal = Arsenic.INSTANCE.getModuleManager().getModule(AutoCrystal.class);
 
 					if (!autoCrystal.isEnabled())
-						autoCrystal.onTick();
+						autoCrystal.onTickEvent(event);
 				}
 			}
 		} else reset();
 	}
 
-	@Override
-	public void onItemUse(ItemUseEvent event) {
+	@EventHandler
+	private void onItemUseEvent(ItemUseEvent event) {
 		ItemStack mainHandStack = mc.player.getMainHandStack();
 		if ((mainHandStack.isOf(Items.END_CRYSTAL) || mainHandStack.isOf(Items.OBSIDIAN)) && GLFW.glfwGetMouseButton(mc.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS)
 			event.cancel();
@@ -180,8 +174,8 @@ public final class AutoHitCrystal extends Module implements TickListener, ItemUs
 		crystalSelected = false;
 	}
 
-	@Override
-	public void onAttack(AttackEvent event) {
+	@EventHandler
+	private void onAttackEvent(AttackEvent event) {
 		if (mc.player.getMainHandStack().isOf(Items.END_CRYSTAL) && GLFW.glfwGetMouseButton(mc.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_PRESS)
 			event.cancel();
 	}

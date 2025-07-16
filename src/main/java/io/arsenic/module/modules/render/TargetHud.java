@@ -1,16 +1,16 @@
 package io.arsenic.module.modules.render;
 
-import io.arsenic.event.events.HudListener;
-import io.arsenic.event.events.PacketSendListener;
+import io.arsenic.event.events.HudEvent;
+import io.arsenic.event.events.PacketSendEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
-import io.arsenic.utils.*;
 import io.arsenic.utils.MathUtils;
 import io.arsenic.utils.RenderUtils;
 import io.arsenic.utils.TextRenderer;
 import io.arsenic.utils.Utils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.network.PlayerListEntry;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
 
-public final class TargetHud extends Module implements HudListener, PacketSendListener {
+public final class TargetHud extends Module {
 	private final NumberSetting xCoord = new NumberSetting("X", 0, 1920, 500, 1);
 	private final NumberSetting yCoord = new NumberSetting("Y", 0, 1080, 500, 1);
 	private final BooleanSetting hudTimeout = new BooleanSetting("Timeout", true)
@@ -42,20 +42,16 @@ public final class TargetHud extends Module implements HudListener, PacketSendLi
 
 	@Override
 	public void onEnable() {
-		eventManager.add(HudListener.class, this);
-		eventManager.add(PacketSendListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(HudListener.class, this);
-		eventManager.remove(PacketSendListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onRenderHud(HudEvent event) {
+	@EventHandler
+	private void onRenderHudEvent(HudEvent event) {
 		DrawContext context = event.context;
 
 		int x = xCoord.getValueInt();
@@ -140,8 +136,8 @@ public final class TargetHud extends Module implements HudListener, PacketSendLi
 		};
 	}
 
-	@Override
-	public void onPacketSend(PacketSendListener.PacketSendEvent event) {
+	@EventHandler
+	private void onPacketSendEvent(PacketSendEvent event) {
 		if (event.packet instanceof PlayerInteractEntityC2SPacket packet) {
 			packet.handle(new PlayerInteractEntityC2SPacket.Handler() {
 				@Override

@@ -1,13 +1,16 @@
 package io.arsenic.event;
 
-public abstract class CancellableEvent<T extends Listener> extends Event<T> {
-	private boolean isCancelled = false;
+import meteordevelopment.orbit.ICancellable;
 
-	public boolean isCancelled() {
-		return isCancelled;
-	}
+public class CancellableEvent implements ICancellable {
+    private boolean cancelled = false;
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	public void cancel() {
-		isCancelled = true;
-	}
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
 }

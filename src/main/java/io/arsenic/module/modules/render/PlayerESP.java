@@ -1,7 +1,7 @@
 package io.arsenic.module.modules.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.arsenic.event.events.GameRenderListener;
+import io.arsenic.event.events.GameRenderEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.modules.client.ClickGUI;
@@ -11,6 +11,7 @@ import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.ColorUtils;
 import io.arsenic.utils.RenderUtils;
 import io.arsenic.utils.Utils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +24,7 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.awt.*;
 
-public final class PlayerESP extends Module implements GameRenderListener {
+public final class PlayerESP extends Module {
 	public enum Mode {
 		TwoD, ThreeD
 	}
@@ -44,18 +45,16 @@ public final class PlayerESP extends Module implements GameRenderListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(GameRenderListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(GameRenderListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onGameRender(GameRenderEvent event) {
+	@EventHandler
+	private void onGameRenderEvent(GameRenderEvent event) {
 		for (PlayerEntity player : mc.world.getPlayers()) {
 			if (mode.isMode(Mode.ThreeD)) {
 				if (player != mc.player) {

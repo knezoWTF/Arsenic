@@ -1,6 +1,6 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.mixin.MinecraftClientAccessor;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
@@ -10,6 +10,7 @@ import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.MathUtils;
 import io.arsenic.utils.MouseSimulation;
 import io.arsenic.utils.TimerUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
@@ -19,7 +20,7 @@ import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
 
-public final class AutoClicker extends Module implements TickListener {
+public final class AutoClicker extends Module {
 	private final BooleanSetting onlyWeapon = new BooleanSetting("Only Weapon", true)
 			.setDescription("Only left clicks with weapon in hand");
 	private final BooleanSetting onlyBlocks = new BooleanSetting("Only Blocks", true)
@@ -46,20 +47,18 @@ public final class AutoClicker extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		timer.reset();
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
 	//using this cuz its faster/instant
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.player == null)
 			return;
 

@@ -1,14 +1,14 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.ItemUseListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.ItemUseEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.KeybindSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.*;
-import io.arsenic.utils.*;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
@@ -24,7 +24,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import org.lwjgl.glfw.GLFW;
 
-public final class AutoCrystal extends Module implements TickListener, ItemUseListener {
+public final class AutoCrystal extends Module {
 	private final KeybindSetting activateKey = new KeybindSetting("Activate Key", GLFW.GLFW_MOUSE_BUTTON_RIGHT, false)
 			.setDescription("Key that does the crystalling");
 
@@ -64,9 +64,6 @@ public final class AutoCrystal extends Module implements TickListener, ItemUseLi
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-		eventManager.add(ItemUseListener.class, this);
-
 		placeClock = 0;
 		breakClock = 0;
 		crystalling = false;
@@ -75,13 +72,11 @@ public final class AutoCrystal extends Module implements TickListener, ItemUseLi
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	public void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 
@@ -214,8 +209,8 @@ public final class AutoCrystal extends Module implements TickListener, ItemUseLi
 		}
 	}
 
-	@Override
-	public void onItemUse(ItemUseEvent event) {
+	@EventHandler
+	private void onItemUseEvent(ItemUseEvent event) {
 		if (mc.player.getMainHandStack().getItem() == Items.END_CRYSTAL) {
 			if ((mc.crosshairTarget instanceof BlockHitResult h
 					&& mc.crosshairTarget.getType() == HitResult.Type.BLOCK

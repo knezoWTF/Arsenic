@@ -1,7 +1,7 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.AttackListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.AttackEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
@@ -9,6 +9,7 @@ import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.InventoryUtils;
 import io.arsenic.utils.MouseSimulation;
 import io.arsenic.utils.WorldUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
@@ -16,7 +17,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.hit.EntityHitResult;
 import org.lwjgl.glfw.GLFW;
 
-public final class ShieldDisabler extends Module implements TickListener, AttackListener {
+public final class ShieldDisabler extends Module {
 	private final NumberSetting hitDelay = new NumberSetting("Hit Delay", 0, 20, 0, 1);
 	private final NumberSetting switchDelay = new NumberSetting("Switch Delay", 0, 20, 0, 1);
 	private final BooleanSetting switchBack = new BooleanSetting("Switch Back", true);
@@ -37,9 +38,6 @@ public final class ShieldDisabler extends Module implements TickListener, Attack
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-		eventManager.add(AttackListener.class, this);
-
 		hitClock = hitDelay.getValueInt();
 		switchClock = switchDelay.getValueInt();
 		previousSlot = -1;
@@ -48,13 +46,11 @@ public final class ShieldDisabler extends Module implements TickListener, Attack
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(AttackListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 
@@ -110,8 +106,8 @@ public final class ShieldDisabler extends Module implements TickListener, Attack
 		}
 	}
 
-	@Override
-	public void onAttack(AttackListener.AttackEvent event) {
+	@EventHandler
+	private void onAttackEvent(AttackEvent event) {
 		if (GLFW.glfwGetMouseButton(mc.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_PRESS)
 			event.cancel();
 	}

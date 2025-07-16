@@ -1,14 +1,15 @@
 package io.arsenic.module.modules.misc;
 
 import com.google.common.collect.Queues;
-import io.arsenic.event.events.PacketReceiveListener;
-import io.arsenic.event.events.PacketSendListener;
-import io.arsenic.event.events.PlayerTickListener;
+import io.arsenic.event.events.PacketReceiveEvent;
+import io.arsenic.event.events.PacketSendEvent;
+import io.arsenic.event.events.PlayerTickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.MinMaxSetting;
 import io.arsenic.utils.TimerUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
@@ -20,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Queue;
 
-public final class FakeLag extends Module implements PlayerTickListener, PacketReceiveListener, PacketSendListener {
+public final class FakeLag extends Module {
 	public final Queue<Packet<?>> packetQueue = Queues.newConcurrentLinkedQueue();
 	public boolean bool;
 	public Vec3d pos = Vec3d.ZERO;
@@ -40,10 +41,6 @@ public final class FakeLag extends Module implements PlayerTickListener, PacketR
 
 	@Override
 	public void onEnable() {
-		eventManager.add(PlayerTickListener.class, this);
-		eventManager.add(PacketSendListener.class, this);
-		eventManager.add(PacketReceiveListener.class, this);
-
 		timerUtil.reset();
 		if (mc.player != null)
 			pos = mc.player.getPos();
@@ -54,15 +51,12 @@ public final class FakeLag extends Module implements PlayerTickListener, PacketR
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(PlayerTickListener.class, this);
-		eventManager.remove(PacketSendListener.class, this);
-		eventManager.remove(PacketReceiveListener.class, this);
 		reset();
 		super.onDisable();
 	}
 
-	@Override
-	public void onPacketReceive(PacketReceiveEvent event) {
+	@EventHandler
+	private void onPacketReceive(PacketReceiveEvent event) {
 		if (mc.world == null)
 			return;
 
@@ -74,8 +68,8 @@ public final class FakeLag extends Module implements PlayerTickListener, PacketR
 		}
 	}
 
-	@Override
-	public void onPacketSend(PacketSendEvent event) {
+	@EventHandler
+	private void onPacketSend(PacketSendEvent event) {
 		if (mc.world == null || mc.player.isUsingItem() || mc.player.isDead())
 			return;
 
@@ -95,8 +89,8 @@ public final class FakeLag extends Module implements PlayerTickListener, PacketR
 		}
 	}
 
-	@Override
-	public void onPlayerTick() {
+	@EventHandler
+	private void onPlayerTickEvent(PlayerTickEvent event) {
 		if (timerUtil.delay(delay)) {
 			if (mc.player != null && !mc.player.isUsingItem()) {
 				reset();

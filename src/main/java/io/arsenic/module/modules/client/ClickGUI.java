@@ -1,18 +1,20 @@
 package io.arsenic.module.modules.client;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.PacketReceiveListener;
+
+import io.arsenic.event.events.PacketReceiveEvent;
 import io.arsenic.gui.ClickGui;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.ModeSetting;
 import io.arsenic.module.setting.NumberSetting;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
 import org.lwjgl.glfw.GLFW;
 
-public final class ClickGUI extends Module implements PacketReceiveListener {
+public final class ClickGUI extends Module {
 	public static final NumberSetting red = new NumberSetting("Red", 0, 255, 255, 1);
 	public static final NumberSetting green = new NumberSetting("Green", 0, 255, 0, 1);
 	public static final NumberSetting blue = new NumberSetting("Blue", 0, 255, 50, 1);
@@ -50,7 +52,6 @@ public final class ClickGUI extends Module implements PacketReceiveListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(PacketReceiveListener.class, this);
 		Arsenic.INSTANCE.previousScreen = mc.currentScreen;
 
 		if (Arsenic.INSTANCE.clickGui != null) {
@@ -64,8 +65,6 @@ public final class ClickGUI extends Module implements PacketReceiveListener {
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(PacketReceiveListener.class, this);
-
 		if (mc.currentScreen instanceof ClickGui) {
 			Arsenic.INSTANCE.clickGui.close();
 			mc.setScreenAndRender(Arsenic.INSTANCE.previousScreen);
@@ -78,8 +77,8 @@ public final class ClickGUI extends Module implements PacketReceiveListener {
 	}
 
 
-	@Override
-	public void onPacketReceive(PacketReceiveEvent event) {
+	@EventHandler
+	private void onPacketReceiveEvent(PacketReceiveEvent event) {
 		if (Arsenic.INSTANCE.guiInitialized) {
 			if (event.packet instanceof OpenScreenS2CPacket) {
 				if (preventClose.getValue())

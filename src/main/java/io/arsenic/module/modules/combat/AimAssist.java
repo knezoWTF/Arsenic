@@ -1,19 +1,19 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.HudListener;
-import io.arsenic.event.events.MouseMoveListener;
+import io.arsenic.event.events.HudEvent;
+import io.arsenic.event.events.MouseMoveEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.MinMaxSetting;
 import io.arsenic.module.setting.ModeSetting;
 import io.arsenic.module.setting.NumberSetting;
-import io.arsenic.utils.*;
 import io.arsenic.utils.MathUtils;
 import io.arsenic.utils.RotationUtils;
 import io.arsenic.utils.TimerUtils;
 import io.arsenic.utils.WorldUtils;
 import io.arsenic.utils.rotation.Rotation;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
-public final class AimAssist extends Module implements HudListener, MouseMoveListener {
+public final class AimAssist extends Module {
 	private final BooleanSetting stickyAim = new BooleanSetting("Sticky Aim", false)
 			.setDescription("Aims at the last attacked player");
 
@@ -99,22 +99,17 @@ public final class AimAssist extends Module implements HudListener, MouseMoveLis
 		pitch = pitchSpeed.getRandomValueFloat();
 		yaw = yawSpeed.getRandomValueFloat();
 
-		eventManager.add(HudListener.class, this);
-		eventManager.add(MouseMoveListener.class, this);
-
 		timer.reset();
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(HudListener.class, this);
-		eventManager.remove(MouseMoveListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onRenderHud(HudEvent event) {
+	@EventHandler
+	private void onRenderHudEvent(HudEvent event) {
 		if (timer.delay(waitFor.getValueFloat()) && !move) {
 			move = true;
 			timer.reset();
@@ -223,8 +218,8 @@ public final class AimAssist extends Module implements HudListener, MouseMoveLis
 		return value;
 	}
 
-	@Override
-	public void onMouseMove(MouseMoveEvent event) {
+	@EventHandler
+	private void onMouseMoveEvent(MouseMoveEvent event) {
 		move = false;
 		timer.reset();
 	}

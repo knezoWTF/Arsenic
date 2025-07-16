@@ -1,8 +1,7 @@
 package io.arsenic.mixin;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.EventManager;
-import io.arsenic.event.events.GameRenderListener;
+import io.arsenic.event.events.GameRenderEvent;
 import io.arsenic.module.modules.misc.Freecam;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
@@ -30,7 +29,7 @@ public abstract class GameRendererMixin {
 		double d = getFov(camera, tickCounter.getTickDelta(true), true);
 		Matrix4f matrix4f = getBasicProjectionMatrix(d);
 		MatrixStack matrixStack = new MatrixStack();
-		EventManager.fire(new GameRenderListener.GameRenderEvent(matrixStack, tickCounter.getTickDelta(true)));
+		Arsenic.EVENT_BUS.post(new GameRenderEvent(matrixStack,tickCounter.getTickDelta(true)));
 	}
 
 	@Inject(method = "shouldRenderBlockOutline", at = @At("HEAD"), cancellable = true)

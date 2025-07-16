@@ -1,13 +1,14 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.PacketReceiveListener;
+import io.arsenic.event.events.PacketReceiveEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.MinMaxSetting;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.c2s.common.KeepAliveC2SPacket;
 import net.minecraft.network.packet.s2c.common.KeepAliveS2CPacket;
 
-public final class PingSpoof extends Module implements PacketReceiveListener {
+public final class PingSpoof extends Module {
 	private final MinMaxSetting ping = new MinMaxSetting("Ping", 0, 1000, 1, 0, 600)
 			.setDescription("The ping you want to achieve");
 
@@ -20,19 +21,16 @@ public final class PingSpoof extends Module implements PacketReceiveListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(PacketReceiveListener.class, this);
-
 		delay = ping.getRandomValueInt();
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(PacketReceiveListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
+	@EventHandler
 	public void onPacketReceive(PacketReceiveEvent event) {
 		if (event.packet instanceof KeepAliveS2CPacket packet) {
 			new Thread(() -> {

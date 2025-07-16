@@ -1,7 +1,7 @@
 package io.arsenic.mixin;
 
-import io.arsenic.event.EventManager;
-import io.arsenic.event.events.CameraUpdateListener;
+import io.arsenic.Arsenic;
+import io.arsenic.event.events.CameraUpdateEvent;
 import net.minecraft.client.render.Camera;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 public class CameraMixin {
 	@ModifyArgs(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setPos(DDD)V"))
 	private void update(Args args) {
-		CameraUpdateListener.CameraUpdateEvent event = new CameraUpdateListener.CameraUpdateEvent(args.get(0), args.get(1), args.get(2));
-		EventManager.fire(event);
+		CameraUpdateEvent event = new CameraUpdateEvent(args.get(0), args.get(1), args.get(2));
+		Arsenic.EVENT_BUS.post(event);
 
 		args.set(0, event.getX());
 		args.set(1, event.getY());

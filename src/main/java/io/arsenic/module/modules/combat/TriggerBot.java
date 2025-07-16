@@ -1,8 +1,8 @@
 package io.arsenic.module.modules.combat;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.AttackListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.AttackEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.modules.client.Friends;
@@ -12,6 +12,7 @@ import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.MouseSimulation;
 import io.arsenic.utils.TimerUtils;
 import io.arsenic.utils.WorldUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -21,7 +22,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
-public final class TriggerBot extends Module implements TickListener, AttackListener {
+public final class TriggerBot extends Module {
 	private final BooleanSetting inScreen = new BooleanSetting("Work In Screen", false)
 			.setDescription("Will trigger even if youre inside a screen");
 	private final BooleanSetting whileUse = new BooleanSetting("While Use", false)
@@ -76,21 +77,17 @@ public final class TriggerBot extends Module implements TickListener, AttackList
 		currentSwordDelay = swordDelay.getRandomValueInt();
 		currentAxeDelay = axeDelay.getRandomValueInt();
 
-		eventManager.add(TickListener.class, this);
-		eventManager.add(AttackListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(AttackListener.class, this);
 		super.onDisable();
 	}
 
 	@SuppressWarnings("all")
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		try {
 			if (!inScreen.getValue() && mc.currentScreen != null)
 				return;
@@ -222,8 +219,8 @@ public final class TriggerBot extends Module implements TickListener, AttackList
 		} catch (Exception ignored) {}
 	}
 
-	@Override
-	public void onAttack(AttackEvent event) {
+	@EventHandler
+	private void onAttackEvent(AttackEvent event) {
 		if (GLFW.glfwGetMouseButton(mc.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) != GLFW.GLFW_PRESS)
 			event.cancel();
 	}

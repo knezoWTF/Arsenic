@@ -1,9 +1,10 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.utils.BlockUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.util.Hand;
@@ -11,7 +12,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
 
-public final class DoubleAnchor extends Module implements TickListener {
+public final class DoubleAnchor extends Module {
 	public DoubleAnchor() {
 		super("Double Anchor",
 				"Helps you do the air place/double anchor",
@@ -24,7 +25,6 @@ public final class DoubleAnchor extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		pos = null;
 		count = 0;
 		super.onEnable();
@@ -32,12 +32,11 @@ public final class DoubleAnchor extends Module implements TickListener {
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen == null) {
 			assert mc.player != null;
 			if (mc.player.getMainHandStack().isOf(Items.RESPAWN_ANCHOR)) {

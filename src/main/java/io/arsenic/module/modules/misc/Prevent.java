@@ -1,19 +1,20 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.AttackListener;
-import io.arsenic.event.events.BlockBreakingListener;
-import io.arsenic.event.events.ItemUseListener;
+import io.arsenic.event.events.AttackEvent;
+import io.arsenic.event.events.BlockBreakingEvent;
+import io.arsenic.event.events.ItemUseEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.utils.BlockUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.hit.BlockHitResult;
 
 
-public final class Prevent extends Module implements ItemUseListener, AttackListener, BlockBreakingListener {
+public final class Prevent extends Module {
 	private final BooleanSetting doubleGlowstone = new BooleanSetting("Double Glowstone", false)
 			.setDescription("Makes it so you can't charge the anchor again if it's already charged");
 	private final BooleanSetting glowstoneMisplace = new BooleanSetting("Glowstone Misplace", false)
@@ -35,38 +36,32 @@ public final class Prevent extends Module implements ItemUseListener, AttackList
 
 	@Override
 	public void onEnable() {
-		eventManager.add(BlockBreakingListener.class, this);
-		eventManager.add(AttackListener.class, this);
-		eventManager.add(ItemUseListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(BlockBreakingListener.class, this);
-		eventManager.remove(AttackListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onAttack(AttackEvent event) {
+	@EventHandler
+	private void onAttackEvent(AttackEvent event) {
 		if (mc.crosshairTarget instanceof BlockHitResult hit) {
 			if (BlockUtils.isBlock(hit.getBlockPos(), Blocks.OBSIDIAN) && obiPunch.getValue() && mc.player.isHolding(Items.END_CRYSTAL))
 				event.cancel();
 		}
 	}
 
-	@Override
-	public void onBlockBreaking(BlockBreakingEvent event) {
+	@EventHandler
+	private void onBlockBreakingEvent(BlockBreakingEvent event) {
 		if (mc.crosshairTarget instanceof BlockHitResult hit) {
 			if (BlockUtils.isBlock(hit.getBlockPos(), Blocks.OBSIDIAN) && obiPunch.getValue() && mc.player.isHolding(Items.END_CRYSTAL))
 				event.cancel();
 		}
 	}
 
-	@Override
-	public void onItemUse(ItemUseEvent event) {
+	@EventHandler
+	private void onItemUseEvent(ItemUseEvent event) {
 		if (mc.crosshairTarget instanceof BlockHitResult hit) {
 			if (BlockUtils.isAnchorCharged(hit.getBlockPos()) && doubleGlowstone.getValue() && mc.player.isHolding(Items.GLOWSTONE))
 				event.cancel();

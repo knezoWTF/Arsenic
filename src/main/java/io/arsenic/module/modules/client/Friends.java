@@ -1,9 +1,9 @@
 package io.arsenic.module.modules.client;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.AttackListener;
-import io.arsenic.event.events.ButtonListener;
-import io.arsenic.event.events.HudListener;
+import io.arsenic.event.events.AttackEvent;
+import io.arsenic.event.events.ButtonEvent;
+import io.arsenic.event.events.HudEvent;
 import io.arsenic.managers.FriendManager;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
@@ -12,6 +12,7 @@ import io.arsenic.module.setting.KeybindSetting;
 import io.arsenic.utils.RenderUtils;
 import io.arsenic.utils.TextRenderer;
 import io.arsenic.utils.WorldUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 
-public final class Friends extends Module implements ButtonListener, AttackListener, HudListener {
+public final class Friends extends Module {
     private final KeybindSetting addFriendKey = new KeybindSetting("Friend Key", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, false)
             .setDescription("Key to add/remove friends");
     public final BooleanSetting antiAttack = new BooleanSetting("Anti-Attack", false)
@@ -41,25 +42,16 @@ public final class Friends extends Module implements ButtonListener, AttackListe
     @Override
     public void onEnable() {
         manager = Arsenic.INSTANCE.getFriendManager();
-
-        eventManager.add(ButtonListener.class, this);
-        eventManager.add(AttackListener.class, this);
-        eventManager.add(HudListener.class, this);
-
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        eventManager.remove(ButtonListener.class, this);
-        eventManager.remove(AttackListener.class, this);
-        eventManager.remove(HudListener.class, this);
-
         super.onDisable();
     }
 
-    @Override
-    public void onButtonPress(ButtonEvent event) {
+    @EventHandler
+    private void onButtonPressEvent(ButtonEvent event) {
         if(mc.player == null)
             return;
 
@@ -79,8 +71,8 @@ public final class Friends extends Module implements ButtonListener, AttackListe
         }
     }
 
-    @Override
-    public void onAttack(AttackEvent event) {
+    @EventHandler
+    private void onAttack(AttackEvent event) {
         if(!antiAttack.getValue())
             return;
 
@@ -88,8 +80,8 @@ public final class Friends extends Module implements ButtonListener, AttackListe
             event.cancel();
     }
 
-    @Override
-    public void onRenderHud(HudEvent event) {
+    @EventHandler
+    private void onRenderHud(HudEvent event) {
         if(!friendStatus.getValue())
             return;
 

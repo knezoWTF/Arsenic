@@ -1,19 +1,20 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.mixin.HandledScreenMixin;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.ModeSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.InventoryUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 
-public final class AutoPotRefill extends Module implements TickListener {
+public final class AutoPotRefill extends Module {
 	public enum Mode {
 		Auto, Hover
 	}
@@ -33,20 +34,17 @@ public final class AutoPotRefill extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-
 		clock = 0;
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen instanceof InventoryScreen inventoryScreen) {
 			if (mode.isMode(Mode.Hover)) {
 				Slot focusedSlot = ((HandledScreenMixin) inventoryScreen).getFocusedSlot();

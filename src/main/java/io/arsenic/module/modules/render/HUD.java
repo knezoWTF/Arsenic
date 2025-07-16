@@ -1,7 +1,7 @@
 package io.arsenic.module.modules.render;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.HudListener;
+import io.arsenic.event.events.HudEvent;
 import io.arsenic.gui.ClickGui;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
@@ -10,13 +10,14 @@ import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.utils.RenderUtils;
 import io.arsenic.utils.TextRenderer;
 import io.arsenic.utils.Utils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PlayerListEntry;
 
 import java.awt.*;
 import java.util.List;
 
-public final class HUD extends Module implements HudListener {
+public final class HUD extends Module {
 	private static final CharSequence arsenic = "Arsenic |";
 	private final BooleanSetting info = new BooleanSetting("Info", true);
 	private final BooleanSetting modules = new BooleanSetting("Modules", true)
@@ -32,18 +33,16 @@ public final class HUD extends Module implements HudListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(HudListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(HudListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onRenderHud(HudEvent event) {
+	@EventHandler
+	private void onRenderHudEvent(HudEvent event) {
 		if (mc.currentScreen != Arsenic.INSTANCE.clickGui) {
 			final List<Module> enabledModules = Arsenic.INSTANCE.
 					getModuleManager().

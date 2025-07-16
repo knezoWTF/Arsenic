@@ -1,9 +1,9 @@
 package io.arsenic.mixin;
 
 import com.mojang.authlib.GameProfile;
-import io.arsenic.event.EventManager;
-import io.arsenic.event.events.MovementPacketListener;
-import io.arsenic.event.events.PlayerTickListener;
+import io.arsenic.Arsenic;
+import io.arsenic.event.events.MovementPacketEvent;
+import io.arsenic.event.events.PlayerTickEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -28,12 +28,12 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
 	@Inject(method = "sendMovementPackets", at = @At("HEAD"))
 	private void onSendMovementPackets(CallbackInfo ci) {
-		EventManager.fire(new MovementPacketListener.MovementPacketEvent());
+		Arsenic.EVENT_BUS.post(new MovementPacketEvent());
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void onPlayerTick(CallbackInfo ci) {
-		EventManager.fire(new PlayerTickListener.PlayerTickEvent());
+		Arsenic.EVENT_BUS.post(new PlayerTickEvent());
 	}
 	//@Inject(method = "sendMovementPackets", at = @At("HEAD"))
 }

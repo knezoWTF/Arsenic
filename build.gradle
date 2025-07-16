@@ -11,7 +11,10 @@ base {
 }
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
+    maven {
+        name = "meteor-maven"
+        url = "https://maven.meteordev.org/releases"
+    }
 }
 
 configurations {
@@ -23,9 +26,9 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor('org.projectlombok:lombok:1.18.30')
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    include implementation("meteordevelopment:orbit:0.2.4")
 
     compileOnly files("lib/annotations-1.0.6.jar")
 }

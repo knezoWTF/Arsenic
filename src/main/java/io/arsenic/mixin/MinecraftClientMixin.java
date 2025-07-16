@@ -1,7 +1,6 @@
 package io.arsenic.mixin;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.EventManager;
 import io.arsenic.event.events.*;
 import io.arsenic.utils.MouseSimulation;
 import net.minecraft.client.MinecraftClient;
@@ -30,22 +29,20 @@ public class MinecraftClientMixin {
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void onTick(CallbackInfo ci) {
 		if (world != null) {
-			TickListener.TickEvent event = new TickListener.TickEvent();
-
-			EventManager.fire(event);
+			Arsenic.EVENT_BUS.post(new TickEvent());
 		}
 	}
 
 	@Inject(method = "onResolutionChanged", at = @At("HEAD"))
 	private void onResolutionChanged(CallbackInfo ci) {
-		EventManager.fire(new ResolutionListener.ResolutionEvent(this.window));
+		Arsenic.EVENT_BUS.post(new ResolutionEvent(this.window));
 	}
 
 	@Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
 	private void onItemUse(CallbackInfo ci) {
-		ItemUseListener.ItemUseEvent event = new ItemUseListener.ItemUseEvent();
+		ItemUseEvent event = new ItemUseEvent();
 
-		EventManager.fire(event);
+		Arsenic.EVENT_BUS.post(event);
 		if (event.isCancelled()) ci.cancel();
 
 		if (MouseSimulation.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_RIGHT)) {
@@ -56,9 +53,9 @@ public class MinecraftClientMixin {
 
 	@Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
 	private void onAttack(CallbackInfoReturnable<Boolean> cir) {
-		AttackListener.AttackEvent event = new AttackListener.AttackEvent();
+		AttackEvent event = new AttackEvent();
 
-		EventManager.fire(event);
+		Arsenic.EVENT_BUS.post(event);
 		if (event.isCancelled()) cir.setReturnValue(false);
 
 		if (MouseSimulation.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {
@@ -69,9 +66,9 @@ public class MinecraftClientMixin {
 
 	@Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
 	private void onBlockBreaking(boolean breaking, CallbackInfo ci) {
-		BlockBreakingListener.BlockBreakingEvent event = new BlockBreakingListener.BlockBreakingEvent();
+		BlockBreakingEvent event = new BlockBreakingEvent();
 
-		EventManager.fire(event);
+		Arsenic.EVENT_BUS.post(event);
 		if (event.isCancelled()) ci.cancel();
 
 		if (MouseSimulation.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_1)) {

@@ -1,8 +1,8 @@
 package io.arsenic.mixin;
 
-import io.arsenic.event.EventManager;
-import io.arsenic.event.events.PacketReceiveListener;
-import io.arsenic.event.events.PacketSendListener;
+import io.arsenic.Arsenic;
+import io.arsenic.event.events.PacketReceiveEvent;
+import io.arsenic.event.events.PacketSendEvent;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
@@ -17,17 +17,17 @@ public class ClientConnectionMixin {
 
 	@Inject(method = "handlePacket", at = @At("HEAD"), cancellable = true)
 	private static <T extends PacketListener> void onPacketReceive(Packet<T> packet, PacketListener listener, CallbackInfo ci) {
-		PacketReceiveListener.PacketReceiveEvent event = new PacketReceiveListener.PacketReceiveEvent(packet);
+		PacketReceiveEvent event = new PacketReceiveEvent(packet);
 
-		EventManager.fire(event);
+		Arsenic.EVENT_BUS.post(event);
 		if (event.isCancelled()) ci.cancel();
 	}
 
 	@Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
 	private void onPacketSend(Packet<?> packet, CallbackInfo ci) {
-		PacketSendListener.PacketSendEvent event = new PacketSendListener.PacketSendEvent(packet);
+		PacketSendEvent event = new PacketSendEvent(packet);
 
-		EventManager.fire(event);
+		Arsenic.EVENT_BUS.post(event);
 		if (event.isCancelled()) ci.cancel();
 	}
 }

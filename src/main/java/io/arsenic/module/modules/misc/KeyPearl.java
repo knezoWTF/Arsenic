@@ -1,6 +1,6 @@
 package io.arsenic.module.modules.misc;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
@@ -8,11 +8,12 @@ import io.arsenic.module.setting.KeybindSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.InventoryUtils;
 import io.arsenic.utils.KeyUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
-public final class KeyPearl extends Module implements TickListener {
+public final class KeyPearl extends Module {
     private final KeybindSetting activateKey = new KeybindSetting("Activate Key", -1, false);
     private final NumberSetting delay = new NumberSetting("Delay", 0, 20, 0, 1);
     private final BooleanSetting switchBack = new BooleanSetting("Switch Back", true);
@@ -29,19 +30,17 @@ public final class KeyPearl extends Module implements TickListener {
 
     @Override
     public void onEnable() {
-        eventManager.add(TickListener.class, this);
         reset();
         super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        eventManager.remove(TickListener.class, this);
         super.onDisable();
     }
 
-    @Override
-    public void onTick() {
+    @EventHandler
+    private void onTickEvent(TickEvent event) {
         if(mc.currentScreen != null)
             return;
 

@@ -1,13 +1,13 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.ItemUseListener;
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.ItemUseEvent;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.*;
-import io.arsenic.utils.*;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Items;
@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 //not mine
-public final class AnchorMacro extends Module implements TickListener, ItemUseListener {
+public final class AnchorMacro extends Module {
 	private final BooleanSetting whileUse = new BooleanSetting("While Use", true).setDescription("If it should trigger while eating/using shield");
 	private final BooleanSetting stopOnKill = new BooleanSetting("Stop on Kill", false).setDescription("Doesn't anchor if body nearby");
 	private final BooleanSetting clickSimulation = new BooleanSetting("Click Simulation", false).setDescription("Makes the CPS hud think you're legit");
@@ -54,8 +54,6 @@ public final class AnchorMacro extends Module implements TickListener, ItemUseLi
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
-		eventManager.add(ItemUseListener.class, this);
 		switchClock = 0;
 		glowstoneClock = 0;
 		explodeClock = 0;
@@ -64,13 +62,11 @@ public final class AnchorMacro extends Module implements TickListener, ItemUseLi
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (mc.currentScreen != null)
 			return;
 
@@ -170,8 +166,8 @@ public final class AnchorMacro extends Module implements TickListener, ItemUseLi
 		}
 	}
 
-	@Override
-	public void onItemUse(ItemUseEvent event) {
+	@EventHandler
+	private void onItemUse(ItemUseEvent event) {
 		if (mc.crosshairTarget instanceof BlockHitResult hitResult && hitResult.getType() == HitResult.Type.BLOCK) {
 			if (mc.player.getMainHandStack().getItem() == Items.RESPAWN_ANCHOR) {
 				Direction dir = hitResult.getSide();

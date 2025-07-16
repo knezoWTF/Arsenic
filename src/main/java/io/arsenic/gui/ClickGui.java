@@ -124,8 +124,8 @@ public final class ClickGui extends Screen {
 
 	@Override
 	public void close() {
-		Arsenic.INSTANCE.getModuleManager().getModule(ClickGUI.class).setEnabledStatus(false);
 		onGuiClose();
+		Arsenic.INSTANCE.getModuleManager().getModule(ClickGUI.class).setEnabledStatus(false);
 	}
 
 	public void onGuiClose() {

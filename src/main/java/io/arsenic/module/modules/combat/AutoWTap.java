@@ -1,18 +1,19 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.HudListener;
-import io.arsenic.event.events.PacketSendListener;
+import io.arsenic.event.events.HudEvent;
+import io.arsenic.event.events.PacketSendEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.MinMaxSetting;
 import io.arsenic.utils.TimerUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
-public final class AutoWTap extends Module implements PacketSendListener, HudListener {
+public final class AutoWTap extends Module {
 	private final MinMaxSetting delay = new MinMaxSetting("Delay", 0, 1000, 1,230, 270);
 	private final BooleanSetting inAir = new BooleanSetting("In Air", false)
 			.setDescription("Whether it should W tap in air");
@@ -33,8 +34,6 @@ public final class AutoWTap extends Module implements PacketSendListener, HudLis
 
 	@Override
 	public void onEnable() {
-		eventManager.add(PacketSendListener.class, this);
-		eventManager.add(HudListener.class, this);
 		currentDelay = delay.getRandomValueInt();
 		jumpedWhileHitting = false;
 		super.onEnable();
@@ -42,13 +41,11 @@ public final class AutoWTap extends Module implements PacketSendListener, HudLis
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(PacketSendListener.class, this);
-		eventManager.remove(HudListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onRenderHud(HudEvent event) {
+	@EventHandler
+	private void onRenderHudEvent(HudEvent event) {
 		if (GLFW.glfwGetKey(mc.getWindow().getHandle(), GLFW.GLFW_KEY_W) != 1) {
 			sprinting = false;
 			holdingForward = false;
@@ -85,8 +82,8 @@ public final class AutoWTap extends Module implements PacketSendListener, HudLis
 		}
 	}
 
-	@Override
-	public void onPacketSend(PacketSendEvent event) {
+	@EventHandler
+	private void onPacketSendEvent(PacketSendEvent event) {
 		if (!(event.packet instanceof PlayerInteractEntityC2SPacket packet))
 			return;
 

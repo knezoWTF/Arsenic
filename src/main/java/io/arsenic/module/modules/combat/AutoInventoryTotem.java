@@ -1,6 +1,6 @@
 package io.arsenic.module.modules.combat;
 
-import io.arsenic.event.events.TickListener;
+import io.arsenic.event.events.TickEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
@@ -9,6 +9,7 @@ import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.FakeInvScreen;
 import io.arsenic.utils.InventoryUtils;
 import io.arsenic.utils.TimerUtils;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -16,7 +17,7 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 
 
-public final class AutoInventoryTotem extends Module implements TickListener {
+public final class AutoInventoryTotem extends Module {
 	public enum Mode {
 		Blatant, Random
 	}
@@ -50,7 +51,6 @@ public final class AutoInventoryTotem extends Module implements TickListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(TickListener.class, this);
 		clock = -1;
 		closeClock = -1;
 		super.onEnable();
@@ -58,12 +58,11 @@ public final class AutoInventoryTotem extends Module implements TickListener {
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(TickListener.class, this);
 		super.onDisable();
 	}
 
-	@Override
-	public void onTick() {
+	@EventHandler
+	private void onTickEvent(TickEvent event) {
 		if (shouldOpenScreen() && autoOpen.getValue())
 			mc.setScreen(new FakeInvScreen(mc.player));
 

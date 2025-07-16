@@ -1,13 +1,13 @@
 package io.arsenic.module.modules.combat;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.events.HudListener;
+import io.arsenic.event.events.HudEvent;
 import io.arsenic.module.Category;
 import io.arsenic.module.Module;
 import io.arsenic.module.setting.BooleanSetting;
 import io.arsenic.module.setting.NumberSetting;
 import io.arsenic.utils.*;
-import io.arsenic.utils.*;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public final class AutoDoubleHand extends Module implements HudListener {
+public final class AutoDoubleHand extends Module {
 	private final BooleanSetting stopOnCrystal = new BooleanSetting("Stop On Crystal", false)
 			.setDescription("Stops while Auto Crystal is running");
 	private final BooleanSetting checkShield = new BooleanSetting("Check Shield", false)
@@ -67,19 +67,17 @@ public final class AutoDoubleHand extends Module implements HudListener {
 
 	@Override
 	public void onEnable() {
-		eventManager.add(HudListener.class, this);
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		eventManager.remove(HudListener.class, this);
 		super.onDisable();
 	}
 
 	@SuppressWarnings("all")
-	@Override
-	public void onRenderHud(HudEvent event) {
+	@EventHandler
+	private void onRenderHudEvent(HudEvent event) {
 		if (mc.player == null)
 			return;
 

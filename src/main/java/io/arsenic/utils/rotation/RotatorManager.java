@@ -1,33 +1,27 @@
 package io.arsenic.utils.rotation;
 
 import io.arsenic.Arsenic;
-import io.arsenic.event.EventManager;
-import io.arsenic.event.events.*;
 import io.arsenic.event.events.*;
 import io.arsenic.utils.RotationUtils;
 
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 
+import static io.arsenic.Arsenic.EVENT_BUS;
 import static io.arsenic.Arsenic.mc;
 
 
-public final class RotatorManager implements PacketSendListener, BlockBreakingListener, ItemUseListener, AttackListener, MovementPacketListener, PacketReceiveListener {
+public final class RotatorManager {
 	private boolean enabled;
 	private boolean rotateBack;
 	private boolean resetRotation;
-	private final EventManager eventManager = Arsenic.INSTANCE.eventManager;
 	private Rotation currentRotation;
 	private float clientYaw, clientPitch;
 	private float serverYaw, serverPitch;
 
 	public RotatorManager() {
-		eventManager.remove(PacketSendListener.class, this);
-		eventManager.remove(AttackListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
-		eventManager.remove(MovementPacketListener.class, this);
-		eventManager.remove(PacketReceiveListener.class, this);
-		eventManager.remove(BlockBreakingListener.class, this);
+		EVENT_BUS.subscribe(this);
 
 
 		enabled = true;
@@ -42,12 +36,7 @@ public final class RotatorManager implements PacketSendListener, BlockBreakingLi
 	}
 
 	public void shutDown() {
-		eventManager.remove(PacketSendListener.class, this);
-		eventManager.remove(AttackListener.class, this);
-		eventManager.remove(ItemUseListener.class, this);
-		eventManager.remove(MovementPacketListener.class, this);
-		eventManager.remove(PacketReceiveListener.class, this);
-		eventManager.remove(BlockBreakingListener.class, this);
+		EVENT_BUS.unsubscribe(this);
 	}
 
 	public Rotation getServerRotation() {
@@ -102,40 +91,40 @@ public final class RotatorManager implements PacketSendListener, BlockBreakingLi
 
 	private boolean wasDisabled;
 
-	@Override
-	public void onAttack(AttackEvent event) {
+	@EventHandler
+	private void onAttackEvent(AttackEvent event) {
 		if (!isEnabled() && wasDisabled) {
 			enabled = true;
 			wasDisabled = false;
 		}
 	}
 
-	@Override
-	public void onItemUse(ItemUseEvent event) {
+	@EventHandler
+	private void onItemUseEvent(ItemUseEvent event) {
 		if (!event.isCancelled() && isEnabled()) {
 			enabled = false;
 			wasDisabled = true;
 		}
 	}
 
-	@Override
-	public void onPacketSend(PacketSendEvent event) {
+	@EventHandler
+	private void onPacketSendEvent(PacketSendEvent event) {
 		if (event.packet instanceof PlayerMoveC2SPacket packet) {
 			serverYaw = packet.getYaw(serverYaw);
 			serverPitch = packet.getPitch(serverPitch);
 		}
 	}
 
-	@Override
-	public void onBlockBreaking(BlockBreakingEvent event) {
+	@EventHandler
+	private void onBlockBreakingEvent(BlockBreakingEvent event) {
 		if (!event.isCancelled() && isEnabled()) {
 			enabled = false;
 			wasDisabled = true;
 		}
 	}
 
-	@Override
-	public void onSendMovementPackets() {
+	@EventHandler
+	private void onSendMovementPacketsEvent(MovementPacketEvent event) {
 		if (isEnabled() && currentRotation != null) {
 			setClientRotation(currentRotation);
 			setServerRotation(currentRotation);
@@ -158,8 +147,8 @@ public final class RotatorManager implements PacketSendListener, BlockBreakingLi
 		}
 	}
 
-	@Override
-	public void onPacketReceive(PacketReceiveEvent event) {
+	@EventHandler
+	private void onPacketReceiveEvent(PacketReceiveEvent event) {
 		if (event.packet instanceof PlayerPositionLookS2CPacket packet) {
 			serverYaw = packet.getYaw();
 			serverPitch = packet.getPitch();
