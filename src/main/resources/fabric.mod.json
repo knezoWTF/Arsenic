@@ -17,7 +17,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.lvstrng.argon.Main"
+      "io.arsenic.Main"
     ]
   },
   "mixins": [
