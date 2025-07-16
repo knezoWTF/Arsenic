@@ -26,21 +26,19 @@ public final class SelfDestruct extends Module {
 	private final StringSetting downloadURL = new StringSetting("Replace URL", "https://cdn.modrinth.com/data/5ZwdcRci/versions/FEOsWs1E/ImmediatelyFast-Fabric-1.2.11%2B1.20.4.jar");
 
 	public SelfDestruct() {
-		super("SelfDestruct", "Kills the system and destroys all traces of using this client. The client mod will be replaced as ImmediatelyFast Mod", -1, Category.CLIENT);
-		setKey(-1);
+		super("Self Destruct",
+				"Removes the client from your game |Credits to lwes for deletion|",
+				-1,
+				Category.CLIENT);
 		addSettings(replaceMod, saveLastModified, downloadURL);
 	}
 
 	@Override
 	public void onEnable() {
-		if (!mc.player.isSneaking()) {
-			setEnabled(false);
-		}
-
 		destruct = true;
+
 		Arsenic.INSTANCE.getModuleManager().getModule(ClickGUI.class).setEnabled(false);
 		setEnabled(false);
-
 
 		Arsenic.INSTANCE.getProfileManager().saveProfile();
 
@@ -51,23 +49,44 @@ public final class SelfDestruct extends Module {
 
 		if (replaceMod.getValue()) {
 			try {
-				Utils.replaceModFile(downloadURL.getValue(), Utils.getCurrentJarPath());
+				String modUrl = downloadURL.getValue();
+				File currentJar = Utils.getCurrentJarPath();
+
+				if (currentJar.exists())
+                    Utils.replaceModFile(modUrl, Utils.getCurrentJarPath());
 			} catch (Exception ignored) {}
 		}
 
 		for (Module module : Arsenic.INSTANCE.getModuleManager().getModules()) {
 			module.setEnabled(false);
+
 			module.setName(null);
 			module.setDescription(null);
+
 			for (Setting<?> setting : module.getSettings()) {
 				setting.setName(null);
 				setting.setDescription(null);
-				if (setting instanceof StringSetting set) set.setValue(null);
+
+				if(setting instanceof StringSetting set)
+					set.setValue(null);
 			}
 			module.getSettings().clear();
 		}
 
-		if (saveLastModified.getValue()) Arsenic.INSTANCE.resetModifiedDate();
-		Runtime.getRuntime().gc();
+		Runtime runtime = Runtime.getRuntime();
+
+		if (saveLastModified.getValue())
+			Arsenic.INSTANCE.resetModifiedDate();
+
+		for (int i = 0; i <= 10; i++) {
+			runtime.gc();
+			runtime.runFinalization();
+
+			try {
+				Thread.sleep(100 * i);
+				Memory.purge();
+				Memory.disposeAll();
+			} catch (InterruptedException ignored) {}
+		}
 	}
 }
