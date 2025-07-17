@@ -62,6 +62,14 @@ public final class Freecam extends Module {
 		mc.options.rightKey.setPressed(false);
 		mc.options.jumpKey.setPressed(false);
 		mc.options.sneakKey.setPressed(false);
+	}
+
+	@EventHandler
+	private void onCameraUpdateEvent(CameraUpdateEvent event) {
+		float tickDelta = RenderTickCounter.ONE.getTickDelta(true);
+
+		if (mc.currentScreen != null)
+			return;
 
 		float f = (float) Math.PI / 180;
 		float f2 = (float) Math.PI;
@@ -107,14 +115,6 @@ public final class Freecam extends Module {
 
 		oldPos = pos;
 		pos = pos.add(vec3d5);
-	}
-
-	@EventHandler
-	private void onCameraUpdateEvent(CameraUpdateEvent event) {
-		float tickDelta = RenderTickCounter.ONE.getTickDelta(true);
-
-		if (mc.currentScreen != null)
-			return;
 
 		event.setX(MathHelper.lerp(tickDelta, oldPos.x, pos.x));
 		event.setY(MathHelper.lerp(tickDelta, oldPos.y, pos.y));
