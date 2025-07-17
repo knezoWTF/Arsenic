@@ -59,7 +59,7 @@ public final class HUD extends Module {
 					}).
 					toList();
 
-			DrawContext context = event.context;
+			DrawContext context = event.context();
 			boolean customFont = ClickGUI.customFont.getValue();
 
 			if (!(mc.currentScreen instanceof ClickGui)) {

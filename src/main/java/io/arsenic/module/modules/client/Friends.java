@@ -88,7 +88,7 @@ public final class Friends extends Module {
         RenderUtils.unscaledProjection();
         if(WorldUtils.getHitResult(100) instanceof EntityHitResult hitResult) {
             Entity entity = hitResult.getEntity();
-            DrawContext context = event.context;
+            DrawContext context = event.context();
 
             if(entity instanceof PlayerEntity player) {
                 if(manager.isFriend(player)) {

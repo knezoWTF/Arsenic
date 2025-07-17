@@ -52,7 +52,7 @@ public final class TargetHud extends Module {
 
 	@EventHandler
 	private void onRenderHudEvent(HudEvent event) {
-		DrawContext context = event.context;
+		DrawContext context = event.context();
 
 		int x = xCoord.getValueInt();
 		int y = yCoord.getValueInt();

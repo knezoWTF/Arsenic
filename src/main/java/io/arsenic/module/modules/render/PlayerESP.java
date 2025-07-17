@@ -60,13 +60,13 @@ public final class PlayerESP extends Module {
 				if (player != mc.player) {
 					Camera cam = mc.getBlockEntityRenderDispatcher().camera;
 					if (cam != null) {
-						MatrixStack matrices = event.matrices;
+						MatrixStack matrices = event.matrices();
 						matrices.push();
 						Vec3d vec = cam.getPos();
 						
-            					event.matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(cam.getPitch()));
-            					event.matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(cam.getYaw() + 180F));
-						event.matrices.translate(-vec.x, -vec.y, -vec.z);
+            					event.matrices().multiply(RotationAxis.POSITIVE_X.rotationDegrees(cam.getPitch()));
+            					event.matrices().multiply(RotationAxis.POSITIVE_Y.rotationDegrees(cam.getYaw() + 180F));
+						event.matrices().translate(-vec.x, -vec.y, -vec.z);
 					}
 
 					double xPos = MathHelper.lerp(RenderTickCounter.ONE.getTickDelta(true), player.prevX, player.getX());
@@ -74,7 +74,7 @@ public final class PlayerESP extends Module {
 					double zPos = MathHelper.lerp(RenderTickCounter.ONE.getTickDelta(true), player.prevZ, player.getZ());
 
 					RenderUtils.renderFilledBox(
-							event.matrices,
+							event.matrices(),
 							(float) xPos - player.getWidth() / 2,
 							(float) yPos,
 							(float) zPos - player.getWidth() / 2,
@@ -84,22 +84,22 @@ public final class PlayerESP extends Module {
 							Utils.getMainColor(alpha.getValueInt(), 1).brighter());
 
 					if (tracers.getValue())
-						RenderUtils.renderLine(event.matrices, Utils.getMainColor(255, 1), mc.crosshairTarget.getPos(), player.getLerpedPos(RenderTickCounter.ONE.getTickDelta(true)));
+						RenderUtils.renderLine(event.matrices(), Utils.getMainColor(255, 1), mc.crosshairTarget.getPos(), player.getLerpedPos(RenderTickCounter.ONE.getTickDelta(true)));
 
-					event.matrices.pop();
+					event.matrices().pop();
 				}
 			} else if (mode.isMode(Mode.TwoD)) {
 				if (player != mc.player) {
 					var cam = mc.getBlockEntityRenderDispatcher().camera;
-					event.matrices.push();
-            				event.matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(cam.getPitch()));
-            				event.matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(cam.getYaw() + 180F));
-					renderOutline(player, getColor(alpha.getValueInt()), event.matrices);
+					event.matrices().push();
+            				event.matrices().multiply(RotationAxis.POSITIVE_X.rotationDegrees(cam.getPitch()));
+            				event.matrices().multiply(RotationAxis.POSITIVE_Y.rotationDegrees(cam.getYaw() + 180F));
+					renderOutline(player, getColor(alpha.getValueInt()), event.matrices());
 
 					if (tracers.getValue())
-						RenderUtils.renderLine(event.matrices, Utils.getMainColor(255, 1), mc.crosshairTarget.getPos(), player.getLerpedPos(RenderTickCounter.ONE.getTickDelta(true)));
+						RenderUtils.renderLine(event.matrices(), Utils.getMainColor(255, 1), mc.crosshairTarget.getPos(), player.getLerpedPos(RenderTickCounter.ONE.getTickDelta(true)));
 
-					event.matrices.pop();
+					event.matrices().pop();
 				}
 			}
 		}

@@ -71,7 +71,7 @@ public final class StorageEsp extends Module {
 	private void renderStorages(GameRenderEvent event) {
 		Camera cam = mc.gameRenderer.getCamera();
 		if (cam != null) {
-			MatrixStack matrices = event.matrices;
+			MatrixStack matrices = event.matrices();
 			matrices.push();
 			Vec3d vec = cam.getPos();
 			matrices.translate(-vec.x, -vec.y, -vec.z);
@@ -81,14 +81,14 @@ public final class StorageEsp extends Module {
 			for (BlockPos blockPos : chunk.getBlockEntityPositions()) {
 				BlockEntity blockEntity = mc.world.getBlockEntity(blockPos);
 
-				RenderUtils.renderFilledBox(event.matrices, blockPos.getX() + 0.1F, blockPos.getY() + 0.05F, blockPos.getZ() + 0.1F, blockPos.getX() + 0.9F, blockPos.getY() + 0.85F, blockPos.getZ() + 0.9F, getColor(blockEntity, alpha.getValueInt()));
+				RenderUtils.renderFilledBox(event.matrices(), blockPos.getX() + 0.1F, blockPos.getY() + 0.05F, blockPos.getZ() + 0.1F, blockPos.getX() + 0.9F, blockPos.getY() + 0.85F, blockPos.getZ() + 0.9F, getColor(blockEntity, alpha.getValueInt()));
 
 				if (tracers.getValue())
-					RenderUtils.renderLine(event.matrices, getColor(blockEntity, 255), mc.crosshairTarget.getPos(), new Vec3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5));
+					RenderUtils.renderLine(event.matrices(), getColor(blockEntity, 255), mc.crosshairTarget.getPos(), new Vec3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5));
 			}
 		}
 
-		MatrixStack matrixStack = event.matrices;
+		MatrixStack matrixStack = event.matrices();
 		matrixStack.pop();
 	}
 
